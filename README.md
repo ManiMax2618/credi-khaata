@@ -1,16 +1,188 @@
-# React + Vite
+# CrediKhaata 💳
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+CrediKhaata is a modern React.js credit ledger management system designed for small shopkeepers who sell products on credit to customers.
 
-Currently, two official plugins are available:
+The application helps manage:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* Customers
+* Credit sales (Loans)
+* Repayments
+* Outstanding balances
+* Due dates
+* PDF statements
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+# 🚀 Features
 
-## Expanding the ESLint configuration
+## 🔐 Authentication
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* Signup page
+* Login page
+* Mock authentication using localStorage
+* Persistent login session
+* Protected routes
+
+## 📊 Dashboard
+
+* Customer cards
+* Outstanding balances
+* Due dates
+* Overdue indicators
+* Responsive layout
+
+## 👤 Customer Management
+
+* Add customers
+* View customer details
+* Loan history
+* Repayment history
+
+## 💰 Loan Management
+
+* Add loans/credit sales
+* Due date tracking
+* Outstanding balance calculation
+* Overdue detection
+
+## 💵 Repayment Management
+
+* Add repayments
+* Balance reduction logic
+* Repayment history
+
+## 🌙 Dark Mode
+
+* Dark/Light theme toggle
+* Theme persistence using localStorage
+
+## 📄 PDF Export
+
+* Download customer statements using jsPDF
+
+## 📱 Responsive UI
+
+* Mobile-first design
+* Tablet support
+* Desktop optimized
+
+---
+
+# 🛠️ Tech Stack
+
+* React 18
+* Vite
+* React Router DOM
+* Context API
+* Tailwind CSS
+* React Toastify
+* jsPDF
+
+---
+
+# 📁 Folder Structure
+
+```bash
+src/
+├── components/
+│   ├── forms/
+│   ├── layout/
+│   └── ui/
+├── context/
+├── data/
+├── pages/
+│   ├── auth/
+│   ├── customer/
+│   └── dashboard/
+├── utils/
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+---
+
+# ⚙️ Installation
+
+## 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/credi-khaata.git
+```
+
+## 2️⃣ Navigate to Project
+
+```bash
+cd credi-khaata
+```
+
+## 3️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+## 4️⃣ Run Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+# 🔑 Demo Credentials
+
+You can create your own account using Signup.
+
+Example:
+
+```txt
+Email: mani@gmail.com
+Password: 1234
+```
+
+---
+
+# 📦 Dependencies
+
+```bash
+npm install react-router-dom react-hook-form react-toastify jspdf
+```
+
+---
+
+# 🎨 UI Highlights
+
+* Modern dashboard layout
+* Clean Tailwind styling
+* Responsive customer cards
+* Dark mode support
+* Professional form designs
+* Interactive user experience
+
+---
+
+# 🚀 Future Improvements
+
+* Firebase Authentication
+* MongoDB Database
+* Express.js Backend
+* Real API Integration
+* Search & Filters
+* Charts & Analytics
+* Edit/Delete Customer
+* Payment Reminders
+* Cloud Deployment
+
+---
+
+# 👨‍💻 Author
+
+Developed by Mani 🚀
+
+---
+
+# 📄 License
+
+This project is open-source and available under the MIT License.
+
