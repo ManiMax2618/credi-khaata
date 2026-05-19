@@ -107,7 +107,7 @@ src/
 ## 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/credi-khaata.git
+git clone https://github.com/ManiMax2618/credi-khaata.git
 ```
 
 ## 2️⃣ Navigate to Project
@@ -175,6 +175,12 @@ npm install react-router-dom react-hook-form react-toastify jspdf
 * Cloud Deployment
 
 ---
+# 🚀 Deployment
+
+Deployed using Vercel.
+
+Live URL:
+https://credi-khaata-green.vercel.app/
 
 # 👨‍💻 Author
 
