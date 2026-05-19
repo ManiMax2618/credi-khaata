@@ -1,36 +1,61 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import { ThemeProvider } from './context/ThemeContext';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 
-import Layout from './components/layout/Layout';
-
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/Signup';
 import Dashboard from './pages/dashboard/Dashboard';
 import CustomerDetail from './pages/customer/CustomerDetail';
 
+import Login from './pages/auth/Login';
+import Signup from './pages/auth/Signup';
+
+import ProtectedRoute from './components/ProtectedRoute';
+
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
+    <BrowserRouter>
+      <Routes>
+        {/* Login */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-            <Route path="/signup" element={<Signup />} />
+        {/* Signup */}
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
 
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Dashboard />} />
+        {/* Protected Dashboard */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-              <Route
-                path="customer/:id"
-                element={<CustomerDetail />}
-              />
-            </Route>
-          </Routes>
-        </Router>
-      </AuthProvider>
-    </ThemeProvider>
+        {/* Protected Customer Detail */}
+        <Route
+          path="/customer/:id"
+          element={
+            <ProtectedRoute>
+              <CustomerDetail />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Redirect */}
+        <Route
+          path="*"
+          element={<Navigate to="/" />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

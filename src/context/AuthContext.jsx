@@ -1,74 +1,103 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
-
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({
+  children,
+}) => {
+  // Always start logged out
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check if user is logged in on app start
+  // Check localStorage only after app loads
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    const savedAuth = localStorage.getItem('isLoggedIn');
+    const savedUser =
+      localStorage.getItem('user');
 
-    if (savedUser && savedAuth === 'true') {
+    if (savedUser) {
       setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
     }
   }, []);
 
+  // Login
   const login = (email, password) => {
-    // Mock authentication
-    if (email && password) {
-      const userData = {
-        id: 1,
-        email: email,
-        name: email.split('@')[0],
+    const savedUser =
+      localStorage.getItem('registeredUser');
+
+    if (!savedUser) {
+      return {
+        success: false,
+        message:
+          'No account found. Please sign up first.',
       };
-      
-      setUser(userData);
-      setIsAuthenticated(true);
-      
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('isLoggedIn', 'true');
-      
-      return true;
     }
-    return false;
+
+    const parsedUser =
+      JSON.parse(savedUser);
+
+    if (
+      parsedUser.email === email &&
+      parsedUser.password === password
+    ) {
+      localStorage.setItem(
+        'user',
+        JSON.stringify(parsedUser)
+      );
+
+      setUser(parsedUser);
+
+      return {
+        success: true,
+      };
+    }
+
+    return {
+      success: false,
+      message: 'Invalid credentials',
+    };
   };
 
+  // Signup
   const signup = (email, password) => {
-    // Mock signup
-    if (email && password.length >= 4) {
-      const userData = {
-        id: Date.now(),
-        email: email,
-        name: email.split('@')[0],
-      };
-      
-      setUser(userData);
-      setIsAuthenticated(true);
-      
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('isLoggedIn', 'true');
-      
-      return true;
-    }
-    return false;
+    const newUser = {
+      email,
+      password,
+    };
+
+    localStorage.setItem(
+      'registeredUser',
+      JSON.stringify(newUser)
+    );
+
+    return {
+      success: true,
+    };
   };
 
+  // Logout
   const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
     localStorage.removeItem('user');
-    localStorage.removeItem('isLoggedIn');
+
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        signup,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () =>
+  useContext(AuthContext);

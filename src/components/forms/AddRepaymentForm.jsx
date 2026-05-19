@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { useTheme } from '../../context/ThemeContext';
 
-const AddRepaymentForm = ({ loans, onSave }) => {
+const AddRepaymentForm = ({
+  loans,
+  onSave
+}) => {
   const { isDark } = useTheme();
+
   const [formData, setFormData] = useState({
-    loanId: loans.length > 0 ? loans[0].id : '',
+    loanId: '',
     amount: '',
-    date: new Date().toISOString().split('T')[0]
+    date: ''
   });
 
   const handleChange = (e) => {
@@ -18,67 +22,114 @@ const AddRepaymentForm = ({ loans, onSave }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    if (!formData.amount || parseInt(formData.amount) <= 0) {
-      alert("Please enter a valid amount!");
+
+    if (
+      !formData.loanId ||
+      !formData.amount ||
+      !formData.date
+    ) {
+      alert('All fields are required!');
       return;
     }
 
     onSave({
-      loanId: formData.loanId,
+      loanId: parseInt(formData.loanId),
       amount: parseInt(formData.amount),
       date: formData.date
     });
 
-    // Reset amount
     setFormData({
-      ...formData,
-      amount: ''
+      loanId: '',
+      amount: '',
+      date: ''
     });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4"
+    >
+      {/* Loan Select */}
       <div>
-        <label className="block text-sm font-medium mb-1">Select Loan</label>
+        <label className="block text-sm font-medium mb-1">
+          Select Loan
+        </label>
+
         <select
           name="loanId"
           value={formData.loanId}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-teal-500"
+          required
+          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-teal-500 ${
+            isDark
+              ? 'bg-gray-900 border-gray-700 text-white'
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
         >
-          {loans.map(loan => (
-            <option key={loan.id} value={loan.id}>
-              {loan.item} — Balance ₹{loan.balance}
+          <option value="">
+            Select a loan
+          </option>
+
+          {loans.map((loan) => (
+            <option
+              key={loan.id}
+              value={loan.id}
+            >
+              {loan.item} - ₹
+              {loan.balance}
             </option>
           ))}
         </select>
       </div>
 
+      {/* Amount */}
       <div>
-        <label className="block text-sm font-medium mb-1">Amount (₹)</label>
+        <label className="block text-sm font-medium mb-1">
+          Amount (₹)
+        </label>
+
         <input
           type="number"
           name="amount"
           value={formData.amount}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-teal-500"
           placeholder="1000"
           required
+          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-teal-500 ${
+            isDark
+              ? 'bg-gray-900 border-gray-700 text-white placeholder-gray-400'
+              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+          }`}
         />
       </div>
 
+      {/* Date */}
       <div>
-        <label className="block text-sm font-medium mb-1">Date</label>
+        <label className="block text-sm font-medium mb-1">
+          Date
+        </label>
+
         <input
           type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-700 focus:outline-none focus:border-teal-500"
+          required
+          style={{
+            colorScheme: isDark
+              ? 'dark'
+              : 'light'
+          }}
+          className={`w-full px-4 py-3 rounded-xl border focus:outline-none focus:border-teal-500 ${
+            isDark
+              ? 'bg-gray-900 border-gray-700 text-white'
+              : 'bg-white border-gray-300 text-gray-900'
+          }`}
         />
       </div>
 
+      {/* Button */}
       <button
         type="submit"
         className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3.5 rounded-xl font-medium mt-2"

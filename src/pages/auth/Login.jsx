@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     const savedUser = JSON.parse(
-      localStorage.getItem('user')
+      localStorage.getItem('registeredUser')
     );
 
     if (
@@ -29,9 +29,10 @@ const Login = () => {
       savedUser.email === formData.email &&
       savedUser.password === formData.password
     ) {
+      // IMPORTANT
       localStorage.setItem(
-        'isAuthenticated',
-        true
+        'user',
+        JSON.stringify(savedUser)
       );
 
       toast.success('Login successful');
@@ -43,33 +44,33 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-5">
-      <div className="w-full max-w-xl bg-gray-900 rounded-3xl p-10 border border-gray-800 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 border border-gray-200 dark:border-gray-800">
         {/* Logo */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-teal-500">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-teal-500">
             CrediKhaata
           </h1>
 
-          <p className="text-gray-400 mt-4 text-xl">
-            Demo auth — stored locally only.
+          <p className="text-gray-500 mt-2 text-sm">
+            Manage customer credit easily.
           </p>
         </div>
 
         {/* Title */}
-        <h2 className="text-5xl font-bold text-white text-center mb-12">
-          Welcome back
+        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
+          Welcome Back
         </h2>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-8"
+          className="space-y-4"
         >
           {/* Email */}
           <div>
-            <label className="block text-white text-xl font-medium mb-3">
-              EMAIL
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              Email
             </label>
 
             <input
@@ -77,16 +78,16 @@ const Login = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="nobody@example.com"
+              placeholder="Enter email"
               required
-              className="w-full px-6 py-5 rounded-2xl bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 text-xl"
+              className="w-full px-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-white text-xl font-medium mb-3">
-              PASSWORD
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              Password
             </label>
 
             <input
@@ -94,36 +95,30 @@ const Login = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder="Enter password"
               required
-              className="w-full px-6 py-5 rounded-2xl bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 text-xl"
+              className="w-full px-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500"
             />
           </div>
 
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white py-5 rounded-2xl font-bold text-2xl transition-all"
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-2xl font-semibold transition-all"
           >
-            Log in
+            Login
           </button>
         </form>
 
         {/* Signup */}
-        <p className="text-center text-gray-400 text-xl mt-10">
-          No account?{' '}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Don’t have an account?{' '}
           <Link
             to="/signup"
             className="text-teal-500 font-semibold hover:underline"
           >
-            Sign up
+            Sign Up
           </Link>
-        </p>
-
-        {/* Footer */}
-        <p className="text-center text-gray-500 mt-12 text-lg">
-          Tip: sign up once, then use the same
-          credentials.
         </p>
       </div>
     </div>

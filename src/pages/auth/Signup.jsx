@@ -21,7 +21,7 @@ const Signup = () => {
     e.preventDefault();
 
     localStorage.setItem(
-      'user',
+      'registeredUser',
       JSON.stringify(formData)
     );
 
@@ -31,33 +31,33 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black px-5">
-      <div className="w-full max-w-xl bg-gray-900 rounded-3xl p-10 border border-gray-800 shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-black px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 border border-gray-200 dark:border-gray-800">
         {/* Logo */}
-        <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-teal-500">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-teal-500">
             CrediKhaata
           </h1>
 
-          <p className="text-gray-400 mt-4 text-xl">
+          <p className="text-gray-500 mt-2 text-sm">
             Create your account to continue.
           </p>
         </div>
 
         {/* Title */}
-        <h2 className="text-5xl font-bold text-white text-center mb-12">
-          Create account
+        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
+          Create Account
         </h2>
 
         {/* Form */}
         <form
           onSubmit={handleSubmit}
-          className="space-y-8"
+          className="space-y-4"
         >
           {/* Email */}
           <div>
-            <label className="block text-white text-xl font-medium mb-3">
-              EMAIL
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              Email
             </label>
 
             <input
@@ -65,16 +65,16 @@ const Signup = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="flow177@test.local"
+              placeholder="Enter email"
               required
-              className="w-full px-6 py-5 rounded-2xl bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 text-xl"
+              className="w-full px-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-white text-xl font-medium mb-3">
-              PASSWORD
+            <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-200">
+              Password
             </label>
 
             <input
@@ -82,28 +82,29 @@ const Signup = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="••••••••"
+              placeholder="Enter password"
               required
-              className="w-full px-6 py-5 rounded-2xl bg-gray-950 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-teal-500 text-xl"
+              className="w-full px-4 py-3 rounded-2xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500"
             />
           </div>
 
           {/* Button */}
           <button
             type="submit"
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white py-5 rounded-2xl font-bold text-2xl transition-all"
+            className="w-full bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-2xl font-semibold transition-all"
           >
-            Sign up
+            Sign Up
           </button>
         </form>
 
-        {/* Login Link */}
-        <p className="text-center mt-10">
+        {/* Login */}
+        <p className="text-center text-sm text-gray-500 mt-6">
+          Already have an account?{' '}
           <Link
             to="/login"
-            className="text-teal-500 text-2xl font-semibold hover:underline"
+            className="text-teal-500 font-semibold hover:underline"
           >
-            Back to login
+            Login
           </Link>
         </p>
       </div>

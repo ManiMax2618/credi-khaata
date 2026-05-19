@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-
-import { mockCustomers } from '../../data/mockData';
-
-import AddCustomerForm from '../../components/forms/AddCustomerForm';
 
 import CustomerCard from '../../components/ui/CustomerCard';
+import AddCustomerForm from '../../components/forms/AddCustomerForm';
 
 import { useTheme } from '../../context/ThemeContext';
 
 const Dashboard = () => {
-  const { isDark } = useTheme();
+  const navigate = useNavigate();
+
+  const { isDark, toggleTheme } = useTheme();
 
   const [customers, setCustomers] = useState(() => {
     const savedCustomers =
@@ -19,16 +17,13 @@ const Dashboard = () => {
 
     return savedCustomers
       ? JSON.parse(savedCustomers)
-      : mockCustomers;
+      : [];
   });
 
   const [showAddForm, setShowAddForm] =
     useState(false);
 
-  const [searchTerm, setSearchTerm] =
-    useState('');
-
-  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
 
   // Save customers
   useEffect(() => {
@@ -37,17 +32,6 @@ const Dashboard = () => {
       JSON.stringify(customers)
     );
   }, [customers]);
-
-  // Filter customers
-  const filteredCustomers = customers.filter(
-    (customer) =>
-      customer.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      customer.email
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-  );
 
   // Add customer
   const handleAddCustomer = (newCustomer) => {
@@ -58,193 +42,239 @@ const Dashboard = () => {
       nextDue: null,
     };
 
-    setCustomers([...customers, customer]);
+    setCustomers((prev) => [
+      ...prev,
+      customer,
+    ]);
 
     setShowAddForm(false);
-
-    toast.success(
-      'Customer added successfully!'
-    );
   };
 
   // Delete customer
-  const handleDeleteCustomer = (
-    customerId,
-    customerName
-  ) => {
-    const confirmDelete = window.confirm(
-      `Delete ${customerName}?`
-    );
-
-    if (!confirmDelete) return;
-
+  const handleDeleteCustomer = (id) => {
     const updatedCustomers = customers.filter(
-      (customer) => customer.id !== customerId
+      (customer) => customer.id !== id
     );
 
     setCustomers(updatedCustomers);
 
-    // Remove related storage
+    localStorage.removeItem(`loans-${id}`);
     localStorage.removeItem(
-      `loans-${customerId}`
-    );
-
-    localStorage.removeItem(
-      `repayments-${customerId}`
-    );
-
-    toast.success(
-      'Customer deleted successfully!'
+      `repayments-${id}`
     );
   };
 
-  // Open detail page
+  // Open customer detail
   const handleCustomerClick = (id) => {
     navigate(`/customer/${id}`);
   };
 
+  // Search filter
+  const filteredCustomers = customers.filter(
+    (customer) =>
+      customer.name
+        .toLowerCase()
+        .includes(search.toLowerCase())
+  );
+
+  // Total outstanding
+  const totalOutstanding = customers.reduce(
+    (sum, customer) =>
+      sum + (customer.outstanding || 0),
+    0
+  );
+
   return (
-    <div>
+    <div
+      className={`min-h-screen transition-colors duration-100 ${
+        isDark
+          ? 'bg-black text-white'
+          : 'bg-gray-100 text-gray-900'
+      }`}
+    >
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+      <div
+        className={`flex justify-between items-center px-5 py-4 border-b ${
+          isDark
+            ? 'bg-gray-950 border-gray-800'
+            : 'bg-white border-gray-200'
+        }`}
+      >
+        {/* Logo */}
         <div>
-          <h1
-            className={`text-5xl font-bold ${
-              isDark
-                ? 'text-white'
-                : 'text-gray-900'
-            }`}
-          >
-            Dashboard
+          <h1 className="text-3xl font-bold text-teal-500">
+            CrediKhaata
           </h1>
 
-          <p className="text-gray-500 mt-3 text-xl">
-            Manage customer credit and
-            repayments.
+          <p className="text-sm text-gray-500">
+            Credit Ledger
           </p>
         </div>
 
-        <button
-          onClick={() => setShowAddForm(true)}
-          className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-2xl font-semibold text-xl transition-all"
-        >
-          + Add Customer
-        </button>
+        {/* Right Side */}
+        <div className="flex items-center gap-5">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="text-2xl"
+          >
+            {isDark ? '☀️' : '🌙'}
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={() => {
+              localStorage.removeItem('user');
+              window.location.href =
+                '/login';
+            }}
+            className="text-red-500 font-semibold"
+          >
+            Log out
+          </button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="mb-10">
+      {/* Main */}
+      <div className="max-w-7xl mx-auto px-5 py-5">
+        {/* Top */}
+        <div className="flex justify-between items-center mb-5">
+          <div>
+            <h2 className="text-4xl font-bold">
+              Dashboard
+            </h2>
+
+            <p className="text-gray-500 mt-1">
+              Manage customer credit and
+              repayments.
+            </p>
+          </div>
+
+          <button
+            onClick={() =>
+              setShowAddForm(true)
+            }
+            className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-3 rounded-2xl font-semibold"
+          >
+            + Add Customer
+          </button>
+        </div>
+
+        {/* Search */}
         <input
           type="text"
           placeholder="Search customers..."
-          value={searchTerm}
+          value={search}
           onChange={(e) =>
-            setSearchTerm(e.target.value)
+            setSearch(e.target.value)
           }
-          className={`w-full px-6 py-5 rounded-3xl border text-xl focus:outline-none transition-all ${
+          className={`w-full px-5 py-3 rounded-2xl border mb-6 outline-none ${
             isDark
-              ? 'bg-gray-900 border-gray-700 text-white placeholder-gray-500 focus:border-teal-500'
-              : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:border-teal-500'
+              ? 'bg-gray-950 border-gray-800 text-white'
+              : 'bg-white border-gray-300 text-black'
           }`}
         />
-      </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {/* Total Customers */}
-        <div
-          className={`rounded-3xl p-8 border shadow-sm ${
-            isDark
-              ? 'bg-gray-900 border-gray-800'
-              : 'bg-white border-gray-200'
-          }`}
-        >
-          <p className="text-gray-500 text-lg">
-            Total Customers
-          </p>
-
-          <h2
-            className={`text-6xl font-bold mt-5 ${
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {/* Total Customers */}
+          <div
+            className={`rounded-3xl p-5 shadow ${
               isDark
-                ? 'text-white'
-                : 'text-gray-900'
+                ? 'bg-gray-950 border border-gray-800'
+                : 'bg-white border border-gray-200'
             }`}
           >
-            {customers.length}
-          </h2>
+            <p className="text-gray-500 mb-2">
+              Total Customers
+            </p>
+
+            <h3 className="text-4xl font-bold">
+              {customers.length}
+            </h3>
+          </div>
+
+          {/* Active */}
+          <div
+            className={`rounded-3xl p-5 shadow ${
+              isDark
+                ? 'bg-gray-950 border border-gray-800'
+                : 'bg-white border border-gray-200'
+            }`}
+          >
+            <p className="text-gray-500 mb-2">
+              Active Customers
+            </p>
+
+            <h3 className="text-4xl font-bold text-teal-500">
+              {
+                customers.filter(
+                  (c) =>
+                    c.outstanding > 0
+                ).length
+              }
+            </h3>
+          </div>
+
+          {/* Outstanding */}
+          <div
+            className={`rounded-3xl p-5 shadow ${
+              isDark
+                ? 'bg-gray-950 border border-gray-800'
+                : 'bg-white border border-gray-200'
+            }`}
+          >
+            <p className="text-gray-500 mb-2">
+              Total Outstanding
+            </p>
+
+            <h3 className="text-4xl font-bold text-red-500">
+              ₹{totalOutstanding}
+            </h3>
+          </div>
         </div>
 
-        {/* Active Customers */}
-        <div
-          className={`rounded-3xl p-8 border shadow-sm ${
-            isDark
-              ? 'bg-gray-900 border-gray-800'
-              : 'bg-white border-gray-200'
-          }`}
-        >
-          <p className="text-gray-500 text-lg">
-            Active Customers
-          </p>
-
-          <h2 className="text-6xl font-bold mt-5 text-teal-500">
-            {
-              customers.filter(
-                (customer) =>
-                  customer.outstanding > 0
-              ).length
-            }
-          </h2>
-        </div>
-
-        {/* Outstanding */}
-        <div
-          className={`rounded-3xl p-8 border shadow-sm ${
-            isDark
-              ? 'bg-gray-900 border-gray-800'
-              : 'bg-white border-gray-200'
-          }`}
-        >
-          <p className="text-gray-500 text-lg">
-            Total Outstanding
-          </p>
-
-          <h2 className="text-6xl font-bold mt-5 text-red-500">
-            ₹
-            {customers.reduce(
-              (total, customer) =>
-                total + customer.outstanding,
-              0
+        {/* Customer Cards */}
+        {filteredCustomers.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredCustomers.map(
+              (customer) => (
+                <CustomerCard
+                  key={customer.id}
+                  customer={customer}
+                  onClick={
+                    handleCustomerClick
+                  }
+                  onDelete={
+                    handleDeleteCustomer
+                  }
+                />
+              )
             )}
-          </h2>
-        </div>
+          </div>
+        ) : (
+          <div
+            className={`rounded-3xl p-10 text-center ${
+              isDark
+                ? 'bg-gray-950 border border-gray-800'
+                : 'bg-white border border-gray-200'
+            }`}
+          >
+            <p className="text-gray-500">
+              No customers found.
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Modal */}
+      {/* Add Customer Modal */}
       {showAddForm && (
         <AddCustomerForm
-          onClose={() => setShowAddForm(false)}
+          onClose={() =>
+            setShowAddForm(false)
+          }
           onSave={handleAddCustomer}
         />
-      )}
-
-      {/* Customer Cards */}
-      {filteredCustomers.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {filteredCustomers.map((customer) => (
-            <CustomerCard
-              key={customer.id}
-              customer={customer}
-              onClick={handleCustomerClick}
-              onDelete={handleDeleteCustomer}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="text-center py-20">
-          <p className="text-gray-500 text-2xl">
-            No customers found.
-          </p>
-        </div>
       )}
     </div>
   );
